@@ -1,4 +1,4 @@
-# SinglyLinkedList API Reference
+# SinglyLinkedList Reference
 
 This document provides a detailed API reference for the `SinglyLinkedList` class defined in `SinglyLinkedList.h`.
 
