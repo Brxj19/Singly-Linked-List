@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SinglyLinkedList C++ Library Documentation</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chosen Palette: Midnight Slate and Sky Blue -->
+    <!-- Application Structure Plan: A two-column layout common for documentation sites. A fixed navigation sidebar on the left allows users to quickly jump between sections (Overview, API, Examples, Performance). The main content area on the right dynamically displays the selected section. This structure is chosen for its high usability and discoverability, which is ideal for developers who need to find specific information quickly without scrolling through a long document. -->
+    <!-- Visualization & Content Choices: Report Info: API Reference -> Goal: Organize & Inform -> Viz/Method: Interactive accordion list with code snippets -> Interaction: Click to expand/collapse function details and view usage code -> Justification: Provides comprehensive detail without cluttering the initial view. | Report Info: Time Complexity Table -> Goal: Inform & Compare -> Viz/Method: HTML table with color-coded badges for complexities -> Interaction: None -> Justification: Makes performance characteristics instantly scannable. | Report Info: Code Blocks -> Goal: Enable -> Viz/Method: Styled code blocks with a copy button -> Interaction: Click to copy -> Justification: Improves developer experience. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --bg-main: #0f172a; /* slate-900 */
+            --bg-sidebar: #1e293b; /* slate-800 */
+            --text-main: #e2e8f0; /* slate-200 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #475569; /* slate-600 */
+            --accent-color: #38bdf8; /* sky-400 */
+            --accent-hover: #7dd3fc; /* sky-300 */
+            --code-bg: #334155; /* slate-700 */
+            --code-snippet-bg: #1e293b; /* slate-800 for API snippets */
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+        }
+        .sidebar-link {
+            transition: all 0.2s ease-in-out;
+            border-left: 3px solid transparent;
+            color: var(--text-secondary);
+        }
+        .sidebar-link:hover {
+            background-color: var(--code-bg);
+            border-left-color: var(--accent-hover);
+            color: var(--text-main);
+        }
+        .sidebar-link.active {
+            background-color: rgba(56, 189, 248, 0.1);
+            border-left-color: var(--accent-color);
+            color: var(--accent-color);
+            font-weight: 600;
+        }
+        .content-section {
+            display: none;
+        }
+        .content-section.active {
+            display: block;
+        }
+        h2 {
+            font-size: 1.875rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border-color);
+            color: #f1f5f9; /* slate-100 */
+        }
+        h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            color: #f1f5f9; /* slate-100 */
+        }
+        pre {
+            background-color: var(--code-bg);
+            color: var(--text-main);
+            padding: 1rem;
+            border-radius: 0.5rem;
+            overflow-x: auto;
+            position: relative;
+        }
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+        .copy-btn {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background-color: #475569; /* slate-600 */
+            color: #e2e8f0; /* slate-200 */
+            border: none;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .copy-btn:hover {
+            background-color: #64748b; /* slate-500 */
+        }
+        .api-item {
+            border: 1px solid var(--border-color);
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+            overflow: hidden;
+        }
+        .api-header {
+            background-color: var(--bg-sidebar);
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .api-header:hover {
+            background-color: #334155; /* slate-700 */
+        }
+        .api-body {
+            display: none;
+            padding: 1.25rem;
+            border-top: 1px solid var(--border-color);
+        }
+        .api-body h4 {
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: #cbd5e1; /* slate-300 */
+        }
+        .api-body pre {
+            background-color: var(--code-snippet-bg);
+            padding: 0.75rem;
+            font-size: 0.8rem;
+            border: 1px solid var(--border-color);
+        }
+        .api-arrow {
+            transition: transform 0.2s;
+        }
+        .api-item.open .api-arrow {
+            transform: rotate(90deg);
+        }
+    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="antialiased">
+
+    <div class="flex flex-col md:flex-row min-h-screen">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="w-full md:w-64 bg-sidebar border-r border-border-color p-4 md:p-6 md:fixed md:h-full">
+            <h1 class="text-2xl font-bold text-accent-color mb-6">SinglyLinkedList</h1>
+            <nav id="nav-menu" class="flex flex-col space-y-2">
+                <a href="#overview" class="sidebar-link p-2 rounded-md">Overview</a>
+                <a href="#getting-started" class="sidebar-link p-2 rounded-md">Getting Started</a>
+                <a href="#api-reference" class="sidebar-link p-2 rounded-md">API Reference</a>
+                <a href="#examples" class="sidebar-link p-2 rounded-md">Usage Examples</a>
+                <a href="#performance" class="sidebar-link p-2 rounded-md">Performance</a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 md:ml-64 p-6 md:p-10">
+            
+            <!-- Overview Section -->
+            <section id="overview" class="content-section">
+                <h2>Overview</h2>
+                <p class="text-secondary mb-4">
+                    `SinglyLinkedList` is a modern, header-only C++17 library that provides a singly linked list container, similar in functionality to `std::forward_list`. It is built with modern C++ practices, including smart pointers for automatic memory management (`std::unique_ptr`), move semantics, and emplacement for optimal performance.
+                </p>
+                <p class="text-secondary">
+                    This library is ideal for scenarios where you need efficient insertions and deletions at the beginning of a sequence and don't require bidirectional iteration.
+                </p>
+                <h3>Features</h3>
+                <ul class="list-disc list-inside space-y-2 text-secondary">
+                    <li><b>Automatic Memory Management</b>: No manual `new` or `delete` required.</li>
+                    <li><b>Full Support for Move Semantics</b>: Efficiently move objects instead of copying them.</li>
+                    <li><b>In-place Construction</b>: `emplace` functions construct objects directly in the list, avoiding temporary copies.</li>
+                    <li><b>STL-like Interface</b>: Follows standard library conventions for methods like `push_front`, `pop_front`, `begin`, `end`, etc.</li>
+                    <li><b>Full Iterator Support</b>: Provides `iterator` and `const_iterator` for easy traversal and compatibility with STL algorithms.</li>
+                    <li><b>Exception Safe</b>: Throws standard exceptions like `std::out_of_range` for invalid operations.</li>
+                </ul>
+            </section>
+            
+            <!-- Getting Started Section -->
+            <section id="getting-started" class="content-section">
+                <h2>Getting Started</h2>
+                <h3>Prerequisites</h3>
+                <p class="text-secondary">A C++ compiler that supports the <b>C++17 standard</b> or newer (e.g., GCC 7+, Clang 5+).</p>
+
+                <h3>Compilation</h3>
+                <p class="text-secondary mb-4">Since this is a header-only library, there is no need to build it separately. Simply include `SinglyLinkedList.h` in your project and compile your source files with the C++17 standard enabled.</p>
+                
+                <h4>Example compilation command:</h4>
+                <div class="code-container">
+                    <pre><code class="language-bash">g++ -std=c++17 your_main_file.cpp -o your_program</code></pre>
+                </div>
+
+                <h3>Basic Usage</h3>
+                <div class="code-container">
+                    <pre><code class="language-cpp">#include &lt;iostream&gt;
+#include "SinglyLinkedList.h"
+
+int main() {
+    // Create a list using an initializer list
+    SinglyLinkedList&lt;int&gt; list = {10, 20, 30};
+
+    // Add elements
+    list.push_front(5);  // list is now {5, 10, 20, 30}
+    list.push_back(40); // list is now {5, 10, 20, 30, 40}
+
+    // Iterate and print elements
+    std::cout << "List contents: ";
+    for (const auto& val : list) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+
+    // Access elements
+    std::cout << "Front: " << list.front() << std::endl;
+    std::cout << "Back: " << list.back() << std::endl;
+
+    // Remove an element
+    list.pop_front(); // list is now {10, 20, 30, 40}
+
+    return 0;
+}</code></pre>
+                </div>
+            </section>
+            
+            <!-- API Reference Section -->
+            <section id="api-reference" class="content-section">
+                <h2>API Reference</h2>
+                <p class="text-secondary mb-6">Click on any function to expand its details and view a usage example.</p>
+                <div id="api-container"></div>
+            </section>
+
+            <!-- Examples Section -->
+            <section id="examples" class="content-section">
+                <h2>Usage Examples</h2>
+                <h3>Emplacement</h3>
+                <p class="text-secondary mb-4">Emplacement constructs objects directly within the list, avoiding temporary objects. This is highly efficient for complex types.</p>
+                <div class="code-container">
+                    <pre><code class="language-cpp">struct Record {
+    std::string name;
+    int id;
+    Record(const std::string& n, int i) : name(n), id(i) {
+        std::cout << "Record created!" << std::endl;
+    }
+};
+
+SinglyLinkedList&lt;Record&gt; records;
+// Constructs a Record in-place. No temporary Record object is created.
+records.emplace_front("Alice", 101);</code></pre>
+                </div>
+                <h3>Iterators and `insert_after`/`erase_after`</h3>
+                <p class="text-secondary mb-4">Iterators are used to specify positions for insertion and erasure.</p>
+                <div class="code-container">
+                    <pre><code class="language-cpp">SinglyLinkedList&lt;int&gt; list = {10, 20, 40, 50};
+
+// Get an iterator to the second element (20)
+auto it = list.begin();
+++it; 
+
+// Insert 30 after 20
+list.insert_after(it, 30); // list is now {10, 20, 30, 40, 50}
+
+// Erase the element after 30 (which is 40)
+++it; // it now points to 30
+list.erase_after(it); // list is now {10, 20, 30, 50}</code></pre>
+                </div>
+                <h3>Reversing the List</h3>
+                <div class="code-container">
+                    <pre><code class="language-cpp">SinglyLinkedList&lt;char&gt; list = {'A', 'B', 'C', 'D'};
+list.reverse(); // list is now {'D', 'C', 'B', 'A'}</code></pre>
+                </div>
+            </section>
+            
+            <!-- Performance Section -->
+            <section id="performance" class="content-section">
+                <h2>Performance & Time Complexity</h2>
+                 <div class="overflow-x-auto">
+                    <table class="w-full min-w-max text-left border border-border-color rounded-lg">
+                        <thead class="bg-sidebar">
+                            <tr>
+                                <th class="p-3 border-b border-border-color">Operation</th>
+                                <th class="p-3 border-b border-border-color">Average Case</th>
+                                <th class="p-3 border-b border-border-color">Worst Case</th>
+                            </tr>
+                        </thead>
+                        <tbody id="complexity-table-body">
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    <script>
+        const apiData = {
+            "Lifecycle & Constructors": [
+                { name: "SinglyLinkedList()", desc: "Creates an empty list.", code: "SinglyLinkedList&lt;int&gt; list;" },
+                { name: "SinglyLinkedList(const SinglyLinkedList& other)", desc: "Copy constructor.", code: "SinglyLinkedList&lt;int&gt; list1 = {1, 2};\nSinglyLinkedList&lt;int&gt; list2 = list1;" },
+                { name: "SinglyLinkedList(SinglyLinkedList&& other)", desc: "Move constructor.", code: "SinglyLinkedList&lt;int&gt; list1 = {1, 2};\nSinglyLinkedList&lt;int&gt; list2 = std::move(list1);" },
+                { name: "SinglyLinkedList(std::initializer_list&lt;T&gt; ilist)", desc: "Constructs from an initializer list.", code: "SinglyLinkedList&lt;int&gt; list = {1, 2, 3};" },
+                { name: "operator=(SinglyLinkedList other)", desc: "Copy/move assignment.", code: "list2 = list1;" },
+                { name: "~SinglyLinkedList()", desc: "Destructor.", code: "// Called automatically when list goes out of scope." }
+            ],
+            "Capacity": [
+                { name: "size()", desc: "Returns the number of elements. (O(1))", code: "size_t count = list.size();" },
+                { name: "empty()", desc: "Checks if the list is empty. (O(1))", code: "if (list.empty()) {\n  // ...\n}" }
+            ],
+            "Element Access": [
+                { name: "front()", desc: "Returns a reference to the first element. Throws `std::out_of_range` if empty. (O(1))", code: "int& first = list.front();" },
+                { name: "back()", desc: "Returns a reference to the last element. Throws `std::out_of_range` if empty. (O(1))", code: "int& last = list.back();" }
+            ],
+            "Modifiers": [
+                { name: "push_front(const T& value)", desc: "Adds an element to the beginning (copy). (O(1))", code: "list.push_front(10);" },
+                { name: "push_front(T&& value)", desc: "Adds an element to the beginning (move). (O(1))", code: "int my_val = 20;\nlist.push_front(std::move(my_val));" },
+                { name: "emplace_front(Args&&... args)", desc: "Constructs an element in-place at the beginning. (O(1))", code: "struct Item { Item(int, char){} };\nSinglyLinkedList&lt;Item&gt; items;\nitems.emplace_front(10, 'a');" },
+                { name: "push_back(const T& value)", desc: "Adds an element to the end (copy). (O(1))", code: "list.push_back(100);" },
+                { name: "push_back(T&& value)", desc: "Adds an element to the end (move). (O(1))", code: "int my_val = 200;\nlist.push_back(std::move(my_val));" },
+                { name: "emplace_back(Args&&... args)", desc: "Constructs an element in-place at the end. (O(1))", code: "items.emplace_back(20, 'b');" },
+                { name: "pop_front()", desc: "Removes the first element. Throws `std::out_of_range` if empty. (O(1))", code: "list.pop_front();" },
+                { name: "pop_back()", desc: "Removes the last element. (O(N))", code: "list.pop_back();" },
+                { name: "insert_after(const_iterator pos, const T& value)", desc: "Inserts an element after `pos`. (O(1))", code: "auto it = list.begin();\nlist.insert_after(it, 15);" },
+                { name: "emplace_after(const_iterator pos, Args&&... args)", desc: "Constructs an element in-place after `pos`. (O(1))", code: "auto it = items.begin();\nitems.emplace_after(it, 30, 'c');" },
+                { name: "erase_after(const_iterator pos)", desc: "Erases the element after `pos`. (O(1))", code: "auto it = list.begin();\nlist.erase_after(it);" },
+                { name: "clear()", desc: "Removes all elements. (O(N))", code: "list.clear();" },
+                { name: "reverse()", desc: "Reverses the order of elements. (O(N))", code: "list.reverse();" },
+                { name: "swap(SinglyLinkedList& other)", desc: "Swaps the contents with another list. (O(1))", code: "swap(list1, list2);" }
+            ],
+            "Iterators": [
+                { name: "begin() / end()", desc: "Returns mutable iterators.", code: "for (auto it = list.begin(); it != list.end(); ++it) {\n  *it = *it * 2;\n}" },
+                { name: "cbegin() / cend()", desc: "Returns constant iterators.", code: "for (auto it = list.cbegin(); it != list.cend(); ++it) {\n  std::cout << *it;\n}" }
+            ],
+             "Non-Member Functions": [
+                { name: "operator==", desc: "Performs equality comparison.", code: "if (list1 == list2) { /*...*/ }" },
+                { name: "operator!=", desc: "Performs inequality comparison.", code: "if (list1 != list2) { /*...*/ }" },
+                { name: "operator<, &lt;=, &gt;, &gt;=", desc: "Performs lexicographical comparisons.", code: "if (list1 < list2) { /*...*/ }" }
+            ]
+        };
+
+        const complexityData = [
+            { op: "Access (front/back)", avg: "O(1)", worst: "O(1)" },
+            { op: "Search", avg: "O(N)", worst: "O(N)" },
+            { op: "push_front, pop_front", avg: "O(1)", worst: "O(1)" },
+            { op: "push_back", avg: "O(1)", worst: "O(1)" },
+            { op: "pop_back", avg: "O(N)", worst: "O(N)" },
+            { op: "insert_after", avg: "O(1)", worst: "O(1)" },
+            { op: "erase_after", avg: "O(1)", worst: "O(1)" },
+            { op: "reverse", avg: "O(N)", worst: "O(N)" },
+            { op: "clear", avg: "O(N)", worst: "O(N)" }
+        ];
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.sidebar-link');
+            const sections = document.querySelectorAll('.content-section');
+
+            function updateContent(hash) {
+                if (!hash) {
+                    hash = '#overview';
+                }
+                
+                navLinks.forEach(link => {
+                    link.classList.toggle('active', link.getAttribute('href') === hash);
+                });
+
+                sections.forEach(section => {
+                    section.classList.toggle('active', '#' + section.id === hash);
+                });
+            }
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    history.pushState(null, null, targetId);
+                    updateContent(targetId);
+                });
+            });
+
+            window.addEventListener('popstate', () => {
+                updateContent(window.location.hash);
+            });
+            
+            const apiContainer = document.getElementById('api-container');
+            for (const category in apiData) {
+                const categoryHeader = document.createElement('h3');
+                categoryHeader.textContent = category;
+                apiContainer.appendChild(categoryHeader);
+
+                apiData[category].forEach(item => {
+                    const itemDiv = document.createElement('div');
+                    itemDiv.className = 'api-item';
+                    let codeBlockHTML = '';
+                    if (item.code) {
+                        codeBlockHTML = `
+                            <h4>Usage Example:</h4>
+                            <pre><code class="language-cpp">${item.code}</code></pre>
+                        `;
+                    }
+                    itemDiv.innerHTML = `
+                        <div class="api-header">
+                            <code class="font-semibold" style="color: var(--accent-color);">${item.name}</code>
+                            <span class="api-arrow text-slate-500">&#9654;</span>
+                        </div>
+                        <div class="api-body">
+                            <p class="text-secondary">${item.desc}</p>
+                            ${codeBlockHTML}
+                        </div>
+                    `;
+                    apiContainer.appendChild(itemDiv);
+                });
+            }
+            
+            apiContainer.addEventListener('click', function(e) {
+                const header = e.target.closest('.api-header');
+                if (header) {
+                    const item = header.parentElement;
+                    item.classList.toggle('open');
+                    const body = item.querySelector('.api-body');
+                    body.style.display = item.classList.contains('open') ? 'block' : 'none';
+                }
+            });
+
+            const complexityTableBody = document.getElementById('complexity-table-body');
+            complexityData.forEach(item => {
+                 const getBadge = (complexity) => {
+                    if (complexity === 'O(1)') {
+                        return `<span class="bg-green-900 text-green-300 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">${complexity}</span>`;
+                    }
+                    if (complexity === 'O(N)') {
+                         return `<span class="bg-orange-900 text-orange-300 text-xs font-medium mr-2 px-2.5 py-0.5 rounded-full">${complexity}</span>`;
+                    }
+                    return complexity;
+                };
+
+                const row = document.createElement('tr');
+                row.className = 'border-b border-border-color last:border-b-0';
+                row.innerHTML = `
+                    <td class="p-3 font-semibold">${item.op}</td>
+                    <td class="p-3">${getBadge(item.avg)}</td>
+                    <td class="p-3">${getBadge(item.worst)}</td>
+                `;
+                complexityTableBody.appendChild(row);
+            });
+
+            document.querySelectorAll('.code-container').forEach(container => {
+                const codeBlock = container.querySelector('pre');
+                const copyBtn = document.createElement('button');
+                copyBtn.className = 'copy-btn';
+                copyBtn.textContent = 'Copy';
+                codeBlock.appendChild(copyBtn);
+
+                copyBtn.addEventListener('click', () => {
+                    const code = codeBlock.querySelector('code').innerText;
+                    navigator.clipboard.writeText(code).then(() => {
+                        copyBtn.textContent = 'Copied!';
+                        setTimeout(() => {
+                            copyBtn.textContent = 'Copy';
+                        }, 2000);
+                    });
+                });
+            });
+
+            updateContent(window.location.hash || '#overview');
+        });
+    </script>
+</body>
+</html>
